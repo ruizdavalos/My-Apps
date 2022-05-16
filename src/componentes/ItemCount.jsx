@@ -1,15 +1,16 @@
 
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
+import { ItemDetail } from "./ItemDetail"
 
 
-export const ItemCount = ( {productoName} ) => {
+export const ItemCount = ( {onAdd , inicio, stockInicial} ) => {
 
-    const [ stock, setStock ] = useState( 5 )
-    const [ contador, setContador] = useState( 1 )
+    const [ stock, setStock ] = useState( stockInicial )
+    const [ contador, setContador] = useState( inicio )
     const [ compra, setCompra] = useState(0)
     const [ confirmado, setConfirmado] = useState( false )
-    const [ reConfirmar, setReConfirmar] = useState( true )
+    // const [ reConfirmar, setReConfirmar] = useState( true )
     const navigate = useNavigate()
 
 
@@ -25,73 +26,46 @@ export const ItemCount = ( {productoName} ) => {
         }
     }
 
-    const comprar = () => {
+    const agregar = () => {
         if ( stock >= contador) {
-            setContador( 1 ) 
             setCompra( contador )
-            setConfirmado( true )
+            setStock( stock - contador)
+            setContador(1)
+            onAdd(contador)
+            // navigate('/carrito')
+
         }else  setContador( 'Sin stock')
+
     }
 
-const volver = () => {
-    setConfirmado( confirmado )
-    navigate( `/` ) 
-}
+// const volver = () => {
+//     setConfirmado( confirmado )
+//     navigate( `/` ) 
+// }
 
-const confirmar = () => {
-    setStock( stock - contador)
-    setReConfirmar( false )
-}
+// const confirmar = () => {
+//     setStock( stock - contador)
+//     // setReConfirmar( false )
+// }
 
-const cerrar = () => {
-    setConfirmado( confirmado )
-    navigate( `/` ) 
-}
+// const cerrar = () => {
+//     setConfirmado( confirmado )
+//     navigate( `/` ) 
+// }
 
-    if( !confirmado ) {
         return (
             <>
                 <div className="itemCountContainer">
-                    <p>En stock :   {stock}</p>
                     <div className="countContainer">
                         <button onClick={ restar } >-</button>
                         <p>  {contador}</p>
                         <button onClick={ sumar } >+</button>
                     </div>
                     <div className='botonComprar'>
-                        <button onClick={ comprar }  > Comprar</button>
+                        <button onClick={ agregar }  > Agregar a carrito</button>
                     </div>
                 </div>
             </>
         )
 
-    }else{
-        if( reConfirmar ){
-            return (
-                <>
-                    <div className="modal">
-                        <div className="contenedorDentroModal">
-                            <h2>cantidad seleccionada : <br />{compra}</h2>
-                            <p>En stock { stock }</p>
-                            <button onClick={ volver } className="buttonClose"  > Volver </button>
-                            <button onClick={ confirmar } className="buttonClose"  > Confirmar </button>
-                        </div>
-                    </div>
-                </>
-            )
-
-        }else {
-            return(
-                <>
-                    <div className="modal">
-                        <div className="contenedorDentroModal">
-                            <h3> {productoName} </h3>
-                            <p> compro : <br />{compra}</p>
-                            <button onClick={ cerrar } className="buttonClose"  > Cerrar </button>
-                        </div>
-                    </div>
-                </>
-            )
-        }
-    }
 }
